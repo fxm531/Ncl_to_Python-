@@ -30,4 +30,5 @@ print(lat)
 print(lon)
 if hasattr(lon,'units'):
 	print("--> Has units attribute: {}".format(lon.units))
+	
 exit()
