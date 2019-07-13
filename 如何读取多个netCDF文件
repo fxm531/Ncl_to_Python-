@@ -1,0 +1,19 @@
+import netCDF4 as nc
+
+file_list  = "file_*.nc" #文件列表
+
+f = nc.MFDataset(file_list) #打开复数文件
+
+var = f.variables['tsurf'] #读取变量tsurf信息
+print(var.dimensions)
+
+time = f.variables['time']#读取时间信息
+print(time[:])
+
+lat = f.variables['lat']#读取经纬度变量信息
+print(lat[:])
+
+lon = f.variables['lon']
+print(lon[:])
+
+exit()
