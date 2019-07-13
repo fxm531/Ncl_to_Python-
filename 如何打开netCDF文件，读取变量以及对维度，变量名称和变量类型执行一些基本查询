@@ -1,0 +1,34 @@
+import Ngl,Nio #加载Ngl与Nio两个模块,文件操作与绘图的核心
+print("") #打印个空格,习惯
+fname  = "./rectilinear_grid_3D.nc" #定义文件名变量,指向下载的数据
+f = Nio.open_file(fname, "r") #定义操作变量,使用模块Nio的open_file方法,后接(文件名,打开方式)
+dims = f.dimensions.values() #获取打开文件的维度数据
+print("--> Dimensions:              {}".format(dims)) #打印文本,使用了format格式化语句
+dimnames = f.dimensions.keys() #获取维度名称
+print("--> Dimension names of file: {}".format(dimnames))
+varnames = f.variables.keys() #获取变量名称
+print ("--> Variable names:         {}".format(varnames))
+var_list = [i for i in varnames if i not in dimnames] #定义变量名列表,并将varnames中的非维度名称变量装入列表
+print ("--> Variables:              {}".format(var_list))
+print("")
+var = f.variables["t"] #读取变量't'
+type  = var.typecode() #获取变量的类型/排列/维度/属性等
+shape = var.shape
+attr  = var.attributes.keys()
+dims  = var.dimensions
+rank  = var.rank
+print("")
+print("--> Type:        {}".format(type))
+print("--> Shape:       {}".format(shape))
+print("--> Attributes:  {}".format(attr))
+print("--> Dimensions:  {}".format(dims))
+print("--> Rank:        {}".format(rank))
+print("")
+lat = f.variables["lat"] #读取纬度信息
+lon = f.variables["lon"] #读取经度信息
+print(lat)
+print(lon)
+if hasattr(lon,'units'):
+	print("--> Has units attribute: {}".format(lon.units))
+
+exit()
