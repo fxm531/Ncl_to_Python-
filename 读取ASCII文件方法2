@@ -1,0 +1,39 @@
+import numpy as np #不采用Ngl模块
+
+print("")
+
+#--  data file name
+
+diri = "./"
+fili = "Test_6h.csv"
+
+delim = ';'#定义分隔符
+
+f     = open(diri+fili,'r')#Python自带的打开方式
+data  = f.readlines()
+
+#-- assign list to append elements
+
+vals = []
+
+for i in data:
+	line = i.strip()#移除字符串头尾指定的字符（默认为空格或换行符）或字符序列
+	cols = line.split(delim)#分割
+	vals.append(cols[:])#加入列表
+
+vals = np.array(vals).astype(float)#建立矩阵
+
+nlines = vals[:,0]#这两处没看懂,应该是跟行列有关,但不知道原理
+ncols  = vals[0,:]
+
+print("vals: {}".format(vals))
+
+#-- rows by column
+
+print("--> columns count:    {}".format(len(ncols)))
+print("--> lines count:      {}".format(len(nlines)))
+print("--> rank of vals:     {}".format(len(vals.shape)))
+print("--> shape vals:       {}".format(vals.shape))
+
+
+exit()
