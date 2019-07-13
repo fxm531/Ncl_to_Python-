@@ -23,7 +23,7 @@ for i in data:
 
 vals = np.array(vals).astype(float)#建立矩阵
 
-nlines = vals[:,0]#这两处没看懂,应该是跟行列有关,但不知道原理
+nlines = vals[:,0]#后面的表示列序号,前面的表示行序号(两个0),下面通过统计长度来计算行和列的值
 ncols  = vals[0,:]
 
 print("vals: {}".format(vals))
