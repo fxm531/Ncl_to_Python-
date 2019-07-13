@@ -1,0 +1,87 @@
+import Ngl
+import os
+import numpy as np
+
+print("")
+
+f      = open("asc6.txt",'r')
+data   = f.readlines()  #按行读取,形成一个列表
+
+nrows  = len(data) #列表的长度就是行数
+
+lat0 = []
+lon0 = []
+vals = []
+
+for i in data[1::]:
+	line = i.strip()
+	cols = line.split()
+	lat0.append(cols[0]) #按行数据切片装入三个列表
+	lon0.append(cols[1])
+	vals.append(cols[2])
+
+lat0   = np.array(lat0).astype(float)#把三个列表转成矩阵,现在都是1行的矩阵
+lon0   = np.array(lon0).astype(float)
+temp1d = np.array(vals).astype(float)
+
+indeqlat = np.array(np.where(lat0 == lat0[0]))#lat0矩阵中,返回数值等于第一个数值的坐标,再转成矩阵,现在是2行240列的矩阵
+
+nlons    = indeqlat.shape                       #(2,240)
+nlons    = nlons[1]                             #(240)同一个纬度对应了240个经度
+nlats    = int(nrows / nlons)                   #(21360/240)总行数除以经度数就是纬度数
+
+lat = lat0[::nlons] #以240的步长截取纬度,共截取89个
+lon = lon0[0:nlons] #经度就是从第1个到第240个
+
+print("--> nlats:            {}".format(len(lat)))
+print("--> nlons:            {}".format(len(lon)))
+print("--> rank of vals:     {}".format(len(temp1d.shape)))
+print("--> shape temp1d:     {}".format(temp1d.shape))
+
+temp2d = np.reshape(temp1d,[nlats,nlons])#重写为89X240的矩阵
+
+print("--> min(temp2d)       {}".format(np.min(temp2d)))
+print("--> max(temp2d)       {}".format(np.max(temp2d)))
+print("--> min(lat)          {}".format(min(lat)))
+print("--> max(lat)          {}".format(max(lat)))
+print("--> min(lon)          {}".format(min(lon)))
+print("--> max(lon)          {}".format(max(lon)))
+
+print("--> shape temp2d:     {}".format(temp2d.shape))
+
+#-- start the graphics
+wks = Ngl.open_wks("png",os.path.basename(__file__).split('.')[0])
+
+#-- set resources
+res                      =  Ngl.Resources()
+
+res.cnFillOn             =  True
+res.cnLinesOn            =  False
+res.cnLineLabelsOn       =  False
+res.cnLevelSelectionMode = "ManualLevels"
+res.cnMinLevelValF       =  np.min(temp1d)
+res.cnMaxLevelValF       =  np.max(temp1d)
+res.cnLevelSpacingF      =  2
+res.cnFillPalette        = 'ncl_default'
+
+res.tiMainString         = "temperature (degC)"
+
+res.lbLabelFontHeightF   = 0.015
+res.lbOrientation        = 'horizontal'
+#res.pmLabelBarOrthogonalPosF = -0.1
+res.pmLabelBarHeightF    = 0.07
+res.pmLabelBarWidthF     = 0.6
+
+res.sfXArray             = lon
+res.sfYArray             = lat
+
+res.mpLimitMode          = 'LatLon'
+res.mpMinLonF            =  min(lon)
+res.mpMaxLonF            =  max(lon)
+res.mpMinLatF            =  min(lat)
+res.mpMaxLatF            =  max(lat)
+res.mpGridAndLimbOn      = False
+
+#-- create the plot
+plot = Ngl.contour_map(wks, temp2d, res)
+Ngl.end()
