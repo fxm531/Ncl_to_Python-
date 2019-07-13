@@ -1,0 +1,19 @@
+import numpy as np
+import Ngl
+
+diri = "./"
+fili = "Test_6h.csv"
+
+
+nrows = 5 #行数和列数
+ncols = 4
+
+vals   = Ngl.asciiread(diri+fili,(nrows,ncols),"float",sep=';')#文件名+行列+数据类型+分隔符
+
+
+print("vals: {}".format(vals))
+print("")
+print("--> rank of vals:     {}".format(len(vals.shape)))
+print("--> shape vals:       {}".format(vals.shape))
+
+exit()
